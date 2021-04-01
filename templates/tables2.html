@@ -1,0 +1,107 @@
+
+
+
+     
+
+     
+
+
+
+        {% extends 'base.html' %}
+         {% block content %}
+
+          <!-- Page Heading -->
+          <div class="row">
+          <div class="col-md-8">
+               <h1 class="h3 mb-2 text-gray-800">Les demandes de frais d'exploitation</h1>
+          <p class="mb-4">....</p>
+          </div>
+          <div class="col-md-4">
+              <br>
+              <a href="{% url 'dtraite' %} ">
+               <button class="btn btn-primary" type="button"  >Les demandes Traitées</button>
+            </a>
+
+          </div>
+
+
+          </div>
+
+
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Suivi de frais chauffeurs.</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                   <tr>
+                     <th>Date demande</th>
+                      <th>Numéro relevé</th>
+                     <!--- <th>Date frais</th>-->
+                      <th>Code Activité</th>
+                     <!--  <th>Libelle</th>-->
+                     
+                      <th>Quantité</th>
+                      <th>Prix unitaire</th>
+                      <th>Total</th>
+                      <th>Urgence</th>
+                      <th>Statut</th>
+                      
+                     
+                       <th>Action</th>
+                  
+                      
+                      <th>Traitement</th>
+                 
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                      {% for item in query_results %}
+    <tr>
+        <td>{{ item.date_demande }}</td>
+        <td>{{ item.num_releve }}</td>
+        <!--<td>{{ item.date_frais }}</td>-->
+        <td>{{ item.code_activite }}</td>
+        <!--<td>{{ item.libelle_activite }}</td>-->
+      
+        <td>{{ item.quantite }}</td>
+        <td>{{ item.pu }}</td>
+        <td>{{ item.total }}</td>
+        <td class="text-info">{{ item.urgence }}</td>
+        {% if item.traite == False %}
+        <td class="text-danger">En attente </td>
+        <td><i class="fa fa-ban" aria-hidden="true"></i></td>
+        {%  else%}
+        <td class="text-success">Validé </td>
+        <td>
+          <a href="pdf/{{item.id}}">
+             <button class="btn btn-success" type="button" value="{{ item.id }}" ><i class="fa fa-download" aria-hidden="true">Telecharger</i></button>
+          </a>
+        </td>
+        {%  endif %}
+        <td>
+        {% if user.is_superuser and item.traite == False %}
+            <a href="{{ item.get_detail_url }}  ">
+               <button class="btn btn-success" type="button" value="{{ item.id }}" >Traitement</button>
+            </a>
+        {% else %}
+            <a href="#!">
+               <button class="btn btn-dark disabled" type="button" value="" >Traitement</button>
+            </a>
+
+        {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        {% endblock %}
