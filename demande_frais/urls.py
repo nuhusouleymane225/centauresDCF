@@ -26,7 +26,7 @@ from django.conf.urls.static import static
 
 
 from demande.views import demande_affiche, demande_save, welcome, \
-    error404, welcome_admin, rapport_mensuel, logoutTlogin, demande_traitement, demande_traffiche, ViewPDF, ImprimePdf
+    error404, welcome_admin, rapport_mensuel, logoutTlogin, demande_traitement, demande_traffiche, ViewPDF, ImprimePdf, demande_traitement_edit, delete_demande
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,6 +44,8 @@ urlpatterns = [
     path('rapport/', rapport_mensuel, name='rapport'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('demandes/traitement/<int:id>', demande_traitement, name='traiter-demande'), # pas touche
+    path('edit/<int:id>', demande_traitement_edit, name='modifier-demande'), # pas touche
+    path('delete/<int:id>', delete_demande),
     path('demandes/traite/', demande_traffiche, name='dtraite'),
     
     path('rapport/', rapport_mensuel, name='rapport'),

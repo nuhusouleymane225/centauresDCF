@@ -4,30 +4,20 @@
 {% load static %}
 {% block content %}
 
-    <div class="row">
-    <div class="col-md-6">
-     <form class="user needs-validation" method="POST" > {% csrf_token %}
+   <div class="row">
+    
 
-                      {{ form | crispy }}
-
-
-                    <button href="#" type="submit" class="btn btn-primary btn-user btn-block" style="width: 50%; margin: 0 auto;
-    display: block;">
-                      Valider
-                    </button>
-                    <br>
-
-                  </form>
-
-    </div>
-
-    <div class="col-md-6">
+    <div class="col-md-9">
      <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
+          <form method="post">
+           {% csrf_token %}
               <h4 class="m-0 font-weight-bold text-primary" style="text-align: center">Information sur la demande de frais num {{ result.id }}</h4>
-              <br>
+              <br> <h4><span class="text-success">{{form | crispy }}</h4></span> &nbsp;&nbsp;<a name="" id="" class="btn btn-info" href="/edit/{{result.id}}" role="button">Modifier</a>
+              <a name="" id="" class="btn btn-danger" href="/delete/{{result.id}}" role="button">Supprimer</a><br>  <br>
               <p> <strong>Date de demande :</strong> {{ result.date_demande }}</p>
-              <p> <strong>Numéro de relevé : </strong>{{ result.num_releve }}</p>
+              <p> <strong>Chauffeur :</strong> {{ result.chauffeur.nom_prenom }} {{result.chauffeur.code_matricule}}</p>
+              <p> <strong>Numéro de relevé : </strong>{{ result.id }}</p>
               <p> <strong>Date de frais : </strong> {{ result.date_frais }}</p>
               <p> <strong>Code Activité : </strong>{{ result.code_activite }}</p>
               <p><strong> Libelle : </strong> {{ result.libelle_activite }}</p>
@@ -39,11 +29,19 @@
               <p><strong> Urgence : </strong>{{ result.urgence }}</p>
               <p><strong> Statut : </strong>{{ result.traite }}</p>
               <p><strong> A rembourser : </strong>{{ result.a_rembourser }}</p>
+              
+              <button href="#" type="submit" class="btn btn-primary btn-user btn-block" style="width: 50%; margin: 0 auto;
+    display: block;">
+                      Valider
+                    </button>
+            </form>  
           </div>
      </div>
 
     </div>
+   
 
 
+    </div>
     </div>
 {% endblock %}

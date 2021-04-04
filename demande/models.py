@@ -135,9 +135,9 @@ class Demande(models.Model):
         max_length=50, verbose_name='Imat. véhicule')
     imat_remorque = models.CharField(
         max_length=50, verbose_name='Imat. Remorque')
-    date_frais = models.DateField(null=True, verbose_name='Date de frais')
+    date_frais = models.DateField(verbose_name='Date de frais')
     date_demande = models.DateField(
-        auto_now_add=False, verbose_name='Date de demande')
+        auto_now_add=True, verbose_name='Date de demande')
     # code activite analytique
     code_activite = models.CharField(
         max_length=150, choices=codeActivite, verbose_name='Code Activité')
@@ -147,7 +147,7 @@ class Demande(models.Model):
     pu = models.FloatField(default=0.00, verbose_name='Prix unitaire')
     total = models.FloatField()
     urgence = models.CharField(choices=urgenceChoix, max_length=255)
-    traite = models.BooleanField(default=False)
+    traite = models.BooleanField(default=False, verbose_name='Validé')
     motif = models.ForeignKey(
         Motif, verbose_name="MOTIF", on_delete=models.CASCADE, default="")
 
@@ -168,5 +168,6 @@ class Demande(models.Model):
 
     def __str__(self):
         return f"{self.id} - {self.created_by}"
-
+    class Meta:
+        ordering = ("-date_demande", "libelle_activite")
     

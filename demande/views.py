@@ -4,7 +4,7 @@ from django.contrib.auth.views import logout_then_login
 from django.shortcuts import redirect, render
 
 
-from .forms import DemandeForm, DemandeTraitementForm
+from .forms import DemandeForm, DemandeTraitementForm, Valider
 from .models import Demande
 # import for view
 
@@ -13,7 +13,8 @@ from django.http import HttpResponse, request
 from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
-
+#fusionchart
+from .fusioncharts import FusionCharts
 
 
 #convert to pdf
@@ -66,8 +67,27 @@ def login(request):
 
 @login_required
 def rapport_mensuel(request):
+    # Chart data is passed to the `dataSource` parameter, as dict, in the form of key-value pairs.
+    dataSource = {}
+    dataSource['chart'] = { 
+        "caption": "Chiffre d'affaire par Code activité",
+            "subCaption": "",
+            "xAxisName": "Code activité",
+            "yAxisName": "Chiffre d'affaire (en XOF)",
+            "numberPrefix": "",
+            "theme": "umber"
+        }
+    dataSource['data'] = []
+    # Iterate through the data in `Revenue` model and insert in to the `dataSource['data']` list
+    for key in Demande.objects.all():
+        data={}
+        data['label'] = key.libelle_activite
+        data['value'] = key.total
+        dataSource['data'].append(data)
+    # Create an object for the Column 2D chart using the FusionCharts class constructor 
     template_name='charts.html'
-    return render(request , template_name )
+    column2D = FusionCharts("spline", "ex1" , "600", "350", "chart-1", "json", dataSource)
+    return render(request , template_name, {'output': column2D.render()} )
 
 def error404(request):
     template_name='404.html'
@@ -80,9 +100,13 @@ def demande_affiche(request):
     context={"query_results":query_results}
     return render(request , template_name ,context)
 
-
-    
-
+def delete_demande(request, id):
+    try:
+        demande_select = Demande.objects.get(id=id)
+    except Demande.DoesNotExist:
+        return redirect('home')
+    demande_select.delete()
+    return redirect('/demandes')
 
 
 @login_required
@@ -97,6 +121,22 @@ def demande_traffiche(request):
 @login_required
 def demande_traitement(request, id):
     result= Demande.objects.get(id=id)
+    form = Valider(initial={'traite': result.traite})
+    if request.method == "POST":
+        form = Valider(request.POST, instance=result)
+        if form.is_valid():
+            try:
+                form.save()
+                model = form.instance
+                return redirect('/demandes')
+            except Exception as e:
+                pass
+    context = {'form': form, 'result':result}
+    return render(request,'traitement-demande.html',context) 
+
+@login_required
+def demande_traitement_edit(request, id):
+    result= Demande.objects.get(id=id)
     form = DemandeTraitementForm(initial={'date_demande': result.date_demande, 'num_releve': result.num_releve, 'date_frais': result.date_frais, 'code_activite': result.code_activite, 'libelle_activite': result.libelle_activite, 'motif': result.motif, 'quantite': result.quantite, 'pu': result.pu, 'total': result.total, 'urgence': result.urgence, 'traite': result.traite})
     if request.method == "POST":
         form = DemandeTraitementForm(request.POST, instance=result)
@@ -108,7 +148,7 @@ def demande_traitement(request, id):
             except Exception as e:
                 pass
     context = {'form': form, 'result':result}
-    return render(request,'traitement-demande.html',context)  
+    return render(request,'tables.html',context)  
 
 
 

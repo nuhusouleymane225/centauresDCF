@@ -1,35 +1,48 @@
 {% extends 'base.html' %} {% include static %} {% block content %}
 <div class="row">
-  <div class="col-md-8">
-    <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Les demande d'entretients</h1>
-    <p class="mb-4">Description....</p>
-  </div>
-  <div class="col-md-4">
-    <br />
-    <a href="{% url 'dtraite' %} ">
-      <button class="btn btn-primary" type="button">
-        Les demandes Traitées
-      </button>
-    </a>
-  </div>
-</div>
+{% load crispy_forms_tags %}
+  
+    <div class="row">
+    <div class="col-md-6">
+     <form class="user needs-validation" method="POST" > {% csrf_token %}
 
-<!-- DataTales Example -->
-  <div class="card shadow mb-4">
-    <h3>Export Data</h3>
-<p>exporting from database</p>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p>Please select format of file.</p>
-    <select name="file-format" class="form-control my-3">
-        <option selected>Choose format...</option>
-        <option>CSV</option>
-        
-        <option>XLS (Excel)</option>
-      </select>
-    <button class="btn btn-primary" type="submit">Export</button>
-  </form>
-  </div>
+                      {{ form | crispy }}
+
+
+                    <button href="#" type="submit" class="btn btn-primary btn-user btn-block" style="width: 50%; margin: 0 auto;
+    display: block;">
+                      Valider
+                    </button>
+                    <br>
+
+                  </form>
+
+    </div>
+
+    <div class="col-md-6">
+     <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+              <h4 class="m-0 font-weight-bold text-primary" style="text-align: center">Information sur la demande de frais num {{ result.id }}</h4>
+              <br>
+              <p> <strong>Date de demande :</strong> {{ result.date_demande }}</p>
+              <p> <strong>Chauffeur :</strong> {{ result.chauffeur.nom_prenom }} {{result.chauffeur.code_matricule}}</p>
+              <p> <strong>Numéro de relevé : </strong>{{ result.id }}</p>
+              <p> <strong>Date de frais : </strong> {{ result.date_frais }}</p>
+              <p> <strong>Code Activité : </strong>{{ result.code_activite }}</p>
+              <p><strong> Libelle : </strong> {{ result.libelle_activite }}</p>
+              <p><strong> Demandeur : </strong> {{ result.created_by }}</p>
+              <p> <strong>MOTIF : </strong> {{ result.motif }}</p>
+              <p><strong> Quantité : </strong>{{ result.quantite }}</p>
+              <p><strong> Prix unitaire : </strong>{{ result.pu }}</p>
+              <p><strong> Total : </strong>{{ result.total }}</p>
+              <p><strong> Urgence : </strong>{{ result.urgence }}</p>
+              <p><strong> Statut : </strong>{{ result.traite }}</p>
+              <p><strong> A rembourser : </strong>{{ result.a_rembourser }}</p>
+          </div>
+     </div>
+
+    </div>
+
+
 
 {% endblock %}

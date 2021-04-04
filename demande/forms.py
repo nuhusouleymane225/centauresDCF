@@ -1,5 +1,6 @@
 from django.db.models import fields
 from django.forms import ModelForm, CheckboxInput, TextInput, DateInput
+from django.forms import widgets
 from django.forms.widgets import Select
 
 
@@ -26,7 +27,7 @@ class DemandeForm(ModelForm):
 class DemandeTraitementForm(ModelForm):
     class Meta:
         model = Demande
-        exclude = ['created_by']
+        exclude = ['created_by', 'a_rembourser']
         widgets={
 
             'num_releve ': TextInput(attrs={'Placeholder': 'Numéro de relevé', 'class': 'form-control', 'autocomplete': 'off'}),
@@ -43,3 +44,11 @@ class DemandeTraitementForm(ModelForm):
             'a_rembourser':  CheckboxInput
 
         } 
+
+class Valider(ModelForm):
+    class Meta:
+        model = Demande
+        fields = ['traite']
+        widgets={
+            'traite': CheckboxInput(),
+        }

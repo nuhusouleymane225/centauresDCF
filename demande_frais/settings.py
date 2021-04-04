@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth',
     'import_export',
     'wkhtmltopdf',
+    'chartjs',
     
 ]
 
@@ -110,7 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {
+            'min_length': 4,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -120,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+SESSION_COOKIE_AGE = 3600
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
