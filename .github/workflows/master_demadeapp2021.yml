@@ -24,7 +24,7 @@ jobs:
       run: |
         python3 -m venv env
         .\env\Scripts\activate
-        pip install -r requirements.txt
+        pip install -r requirement.txt
 
     - name: Zip the application files
       run: Compress-Archive .\* app.zip
